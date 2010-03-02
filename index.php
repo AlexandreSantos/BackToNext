@@ -1,5 +1,5 @@
 <?php
-	// vari·veis para conex„o ao DB
+	// vari√°veis para conex√£o ao DB
 	$dns = "mysql:host=localhost;dbname=awu2";
 	$user = "alexandre";
 	$passwd = "";
@@ -10,7 +10,7 @@
 
 		$sql = "SELECT id, id_curso FROM disciplinas_cursos WHERE id_curso = :idCurso"; // Cria a Query
 		$stmt = $dbh->prepare($sql); // faz o prepare da query
-		$stmt->bindParam(':idCurso', $id_curso); // passa o par‚metro
+		$stmt->bindParam(':idCurso', $id_curso); // passa o par√¢metro
 		$stmt->execute(); // executa a query
 
 		// retorna o resultado query em um array
@@ -31,8 +31,8 @@
 		for($i=0; $i<$qtdRecords; $i++){
 			/**
 			 *  Verifica se o elemento 'id' correspondente
-			 *  a posiÁ„o 0 do segundo array È igual a $id atual
-			 *  da p·gina.
+			 *  a posi√ß√£o 0 do segundo array √© igual a $id atual
+			 *  da p√°gina.
 			 */
 			if($resultStmt[$i]['id'] == $id){
 
@@ -40,33 +40,33 @@
 				// ele informa abaixo
 				echo "encontrei! -> " . $id . "<br />";
 				
-				$next = $id + 1; // pega o prÛximo $id
+				$next = $id + 1; // pega o pr√≥ximo $id
 				$back = $id - 1; // pega o $id anterior
 
 				/*
-				 *  se o prÛximo $id, que È o atual $id mais 1
+				 *  se o pr√≥ximo $id, que √© o atual $id mais 1
 				 *  existir dentro do array retornado pelo DB,
-				 *  o link para o prÛximo È criado, se Ò existir
-				 *  o link Ò È criado e o bot„o de avanÁar fica
+				 *  o link para o pr√≥ximo √© criado, se √± existir
+				 *  o link √± √© criado e o bot√£o de avan√ßar fica
 				 *  desativado
 				 */
 				if(!array_key_exists($next, $resultStmt)){
-					echo "prÛximo È inv·lido, — CRIA O LINK! <br />";
+					echo "pr√≥ximo √© inv√°lido, √ë CRIA O LINK! <br />";
 				}else{
-					echo "o prÛximo È, CRIA LINK OK: " . $next . "<br />";
+					echo "o pr√≥ximo √©, CRIA LINK OK: " . $next . "<br />";
 				}
 				
-				// o mesmo raciocÌnio que o de cima
+				// o mesmo racioc√≠nio que o de cima
 				if(!array_key_exists($back, $resultStmt)){
-					echo "anterior È inv·lido! <br />";
+					echo "anterior √© inv√°lido! <br />";
 				}else{
-					echo "o anterior È: " . $back . "<br />";
+					echo "o anterior √©: " . $back . "<br />";
 				}
 			} // FIM > if($resultStmt[$i]['id'] == $id)
 		} // FIM > for($i=0; $i<$qtdRecords; $i++)
 
 	}catch (PDOException $e){
-		// se algum erro for pego È apresentado na tela
+		// se algum erro for pego √© apresentado na tela
 		echo "Erro! <span style='color: red'>" . $e->getMessage() . "</span>";
 	}
 ?>					
