@@ -11,9 +11,7 @@
 <root>
     <database>
         <dns>mysql:host=localhost;dbname=DDC</dns>
-        <host>Nevada</host>
         <user>alexandre</user>
         <passwd>123456</passwd>
-        <schema>DDC</schema>
     </database>
 </root>
