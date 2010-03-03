@@ -30,7 +30,7 @@ class BackToNext {
     }
 
     /**
-     * Atribui a instância a Query SQL utilizada para limitar a paginação
+     * Informa a classe a Query SQL utilizada para limitar a paginação
      * @param string $sql
      */
     public function setSql($sql) {
