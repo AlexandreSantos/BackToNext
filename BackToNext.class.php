@@ -10,13 +10,20 @@
   * @author Alexandre Santos <alexandre@diariodecodigos.info>
   *
   */
-class Paginacao {
+class BackToNext {
     private $sql = "";
     private $fieldNameIndex = "";
+    private $fileXmlConfig = "";
+    private $currentIndex = "";
+
+    private $dns = "";
+    private $user = "";
+    private $passwd = "";
+    private $arrayResult = "";
 
     /**
      * Retorna a Query SQL atribuída a instância da classe
-     * @return <string>
+     * @return string
      */
     public function getSql() {
         return $this->sql;
@@ -24,15 +31,28 @@ class Paginacao {
 
     /**
      * Atribui a instância a Query SQL utilizada para limitar a paginação
-     * @param <type> $sql
+     * @param string $sql
      */
     public function setSql($sql) {
         $this->sql = $sql;
+
+        try{
+            $dbh = null;
+            $dbh = new PDO($this->dns, $this->user, $this->passwd,  array(PDO::ATTR_PERSISTENT => true));
+            //$stmt = $dbh->query($this->sql);
+            $stmt = $dbh->prepare($this->sql);
+            $stmt->execute();
+
+            $this->arrayResult = null;
+            $this->arrayResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $e){
+            echo "<span style='color: red'>Ops... deu erro, chame o Alexandre e mostre-o:</span> " . $e->getMessage();
+        }
     }
 
     /**
      * Retorna o nome do campo utilizado para navegar
-     * @return <string>
+     * @return string
      */
     public function getFieldNameIndex() {
         return $this->fieldNameIndex;
@@ -41,13 +61,95 @@ class Paginacao {
     /**
      * Informa a classe o nome do campo (banco de dados)
      * da qual a classe vai usar para navegar
-     * @param <string> $fieldNameIndex
+     * @param string $fieldNameIndex
      */
     public function setFieldNameIndex($fieldNameIndex) {
         $this->fieldNameIndex = $fieldNameIndex;
     }
 
+    /**
+     * Retorna o nome do arquivo de configuração (xml)
+     * @return string
+     */
+    public function getFileXmlConfig() {
+        return $this->fileXmlConfig;
+    }
 
+    /**
+     * Informa a classe o nome do arquivo de configuração
+     * essencial para obter os dados de conexão ao DB
+     * @param string $fileXmlConfig
+     */
+    public function setFileXmlConfig($fileXmlConfig) {
+        $this->fileXmlConfig = $fileXmlConfig;
 
-}
+        // obtem os dados para conexão
+        $xml = simplexml_load_file($this->fileXmlConfig);
+        $this->dns = $xml->database[0]->dns;
+        $this->user = $xml->database[0]->user;
+        $this->passwd = $xml->database[0]->passwd;
+    }
+
+    public function getCurrentIndex() {
+        return $this->currentIndex;
+    }
+
+    public function setCurrentIndex($currentIndex) {
+        $this->currentIndex = $currentIndex;
+    }
+
+    /**
+     * Retorna o link de avançar
+     * @return string
+     */
+    public function getNextLink(){
+         $qtdRecords = count($this->arrayResult);
+
+        // Percorre todo o array
+        for($i=0; $i<$qtdRecords; $i++)
+        {
+            if($this->arrayResult[$i][$this->fieldNameIndex] == $this->currentIndex)
+            {
+                $inext = $i + 1;
+
+                if(array_key_exists($inext, $this->arrayResult))
+                {
+                    return $this->arrayResult[$inext][$this->fieldNameIndex];
+                }
+                else
+                {
+                    return "#";
+                }
+            } // FIM > if($resultStmt[$i][$this->fieldNameIndex] == $this->currentIndex)
+        } // FIM > for($i=0; $i<$qtdRecords; $i++)
+    } // FIM > método getNextLink()
+
+    /**
+     * Retorna o link de voltar
+     * @return string
+     */
+    public function getBackLink()
+    {
+         $qtdRecords = count($this->arrayResult);
+
+        // Percorre todo o array
+        for($i=0; $i<$qtdRecords; $i++)
+        {
+            if($this->arrayResult[$i][$this->fieldNameIndex] == $this->currentIndex)
+            {
+                $iback = $i - 1;
+
+                if(array_key_exists($iback, $this->arrayResult))
+                {
+                    return $this->arrayResult[$iback][$this->fieldNameIndex];
+                }
+                else
+                {
+                    return "#";
+                }
+            } // FIM > if($resultStmt[$i][$this->fieldNameIndex] == $this->currentIndex)    
+        } // FIM > for($i=0; $i<$qtdRecords; $i++)
+    } // FIM > getBackLink()
+
+} // Fim da classe!
 ?>
