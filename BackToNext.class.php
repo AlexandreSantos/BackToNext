@@ -1,7 +1,6 @@
 <?php
  /**
-  * Classe para a criação de paginação restringida a um determinado grupo
-  * retornado pelo banco de dados
+  * Classe para a criação dos botões Avançar e Voltar
   *
   * @package AWU
   * @copyright Copyright (c) Alexandre Santos
@@ -21,15 +20,30 @@ class BackToNext {
     private $passwd = "";
     private $arrayResult = "";
 
+	/**
+     * Informa a classe o nome do arquivo de configuração
+     * essencial para obter os dados de conexão ao DB
+     * @param string $fileXmlConfig
+     */
+    public function setFileXmlConfig($fileXmlConfig) {
+        $this->fileXmlConfig = $fileXmlConfig;
+
+        // obtem os dados para conexão
+        $xml = simplexml_load_file($this->fileXmlConfig);
+        $this->dns = $xml->database[0]->dns;
+        $this->user = $xml->database[0]->user;
+        $this->passwd = $xml->database[0]->passwd;
+    }
+	
     /**
-     * Retorna a Query SQL atribuída a instância da classe
+     * Retorna o nome do arquivo de configuração (xml)
      * @return string
      */
-    public function getSql() {
-        return $this->sql;
+    public function getFileXmlConfig() {
+        return $this->fileXmlConfig;
     }
 
-    /**
+	/**
      * Informa a classe a Query SQL utilizada para limitar a paginação
      * @param string $sql
      */
@@ -49,13 +63,13 @@ class BackToNext {
             echo "<span style='color: red'>Ops... deu erro, chame o Alexandre e mostre-o:</span> " . $e->getMessage();
         }
     }
-
+	
     /**
-     * Retorna o nome do campo utilizado para navegar
+     * Retorna a Query SQL atribuída a instância da classe
      * @return string
      */
-    public function getFieldNameIndex() {
-        return $this->fieldNameIndex;
+    public function getSql() {
+        return $this->sql;
     }
 
     /**
@@ -66,36 +80,21 @@ class BackToNext {
     public function setFieldNameIndex($fieldNameIndex) {
         $this->fieldNameIndex = $fieldNameIndex;
     }
-
+	
     /**
-     * Retorna o nome do arquivo de configuração (xml)
+     * Retorna o nome do campo utilizado para navegar
      * @return string
      */
-    public function getFileXmlConfig() {
-        return $this->fileXmlConfig;
-    }
-
-    /**
-     * Informa a classe o nome do arquivo de configuração
-     * essencial para obter os dados de conexão ao DB
-     * @param string $fileXmlConfig
-     */
-    public function setFileXmlConfig($fileXmlConfig) {
-        $this->fileXmlConfig = $fileXmlConfig;
-
-        // obtem os dados para conexão
-        $xml = simplexml_load_file($this->fileXmlConfig);
-        $this->dns = $xml->database[0]->dns;
-        $this->user = $xml->database[0]->user;
-        $this->passwd = $xml->database[0]->passwd;
-    }
-
-    public function getCurrentIndex() {
-        return $this->currentIndex;
+    public function getFieldNameIndex() {
+        return $this->fieldNameIndex;
     }
 
     public function setCurrentIndex($currentIndex) {
         $this->currentIndex = $currentIndex;
+    }
+
+    public function getCurrentIndex() {
+        return $this->currentIndex;
     }
 
     /**
